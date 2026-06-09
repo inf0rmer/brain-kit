@@ -1,0 +1,32 @@
+# brain-kit — maintainer notes
+
+This repo is the **kit** that scaffolds brain vaults. It is not itself a brain, so
+the brain skills (capture/recall/review/import/upkeep) are intentionally **not**
+active here — only `brain-init` is. See `README.md` for the user-facing overview.
+
+## Where things live
+
+- `skills/<name>/SKILL.md` — **canonical** brain skills. Edit here; they are copied
+  verbatim into every new brain's `.claude/skills/`.
+- `template/` — the vault skeleton copied into a new brain. `template/CLAUDE.md` is
+  the **brain's** operating manual (frontmatter schema + retrieval/capture protocol).
+- `template/_seed/` — optional example notes (`brain-init --seed`); excluded from a
+  normal init.
+- `bin/brain-init` — the scaffolder.
+- `.claude/skills/brain-init/` — the only skill active in this kit.
+
+## Rules when editing the kit
+
+- Keep `template/CLAUDE.md` (the schema/protocol) and the skills **in sync** — a
+  skill must not reference a field, folder, or convention the manual doesn't define.
+- Skill names, frontmatter `type` values, and folder paths are a shared contract;
+  change them in all three places (manual, templates, skills) together.
+- `brain-init` copies `skills/*` into brains but never copies itself — brains don't
+  init brains. Don't move `brain-init` into `skills/`.
+- After changing `bin/brain-init`, test it: `bin/brain-init /tmp/test-brain --seed`
+  then inspect the tree and `rm -rf /tmp/test-brain`.
+
+## Pre-commit
+
+Run a smoke test of the scaffolder (init into a temp dir, verify the tree, clean up)
+before committing changes to `bin/`, `template/`, or `skills/`.

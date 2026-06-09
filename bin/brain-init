@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+# brain-init — scaffold a new "brain" vault (its own repo) from this brain-kit.
+#
+# Usage: brain-init <target-dir> [--name "Brain Name"] [--seed] [--no-git] [--force]
+#
+#   <target-dir>   Where to create the brain. Must be empty or non-existent.
+#   --name NAME    Title written into the vault's CLAUDE.md (default: dir name).
+#   --seed         Include the example notes (jane-doe, acme-migration, idea).
+#   --no-git       Skip git init / initial commit.
+#   --force        Allow a non-empty target dir (overlay; use with care).
+set -euo pipefail
+
+KIT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+TEMPLATE="$KIT_DIR/template"
+SKILLS="$KIT_DIR/skills"
+
+usage() { sed -n '2,11p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit "${1:-1}"; }
+
+TARGET="" NAME="" SEED=0 DO_GIT=1 FORCE=0
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --name)    NAME="${2:?--name needs a value}"; shift 2 ;;
+    --seed)    SEED=1; shift ;;
+    --no-git)  DO_GIT=0; shift ;;
+    --force)   FORCE=1; shift ;;
+    -h|--help) usage 0 ;;
+    -*)        echo "Unknown option: $1" >&2; usage ;;
+    *)         [ -z "$TARGET" ] || { echo "Multiple target dirs given" >&2; usage; }
+               TARGET="$1"; shift ;;
+  esac
+done
+[ -n "$TARGET" ] || usage
+
+[ -d "$TEMPLATE" ] && [ -d "$SKILLS" ] || { echo "Kit not found at $KIT_DIR (missing template/ or skills/)" >&2; exit 1; }
+
+if [ -e "$TARGET" ] && [ -n "$(ls -A "$TARGET" 2>/dev/null)" ] && [ "$FORCE" -ne 1 ]; then
+  echo "Error: $TARGET is not empty (use --force to overlay)." >&2; exit 1
+fi
+
+mkdir -p "$TARGET"
+TARGET="$(cd "$TARGET" && pwd)"
+[ -n "$NAME" ] || NAME="$(basename "$TARGET")"
+
+# 1. Vault skeleton (everything in template/ except the optional seed bundle).
+cp -R "$TEMPLATE"/. "$TARGET"/
+rm -rf "$TARGET/_seed"
+
+# 2. Install the brain skills into the vault (scoped to this vault).
+mkdir -p "$TARGET/.claude/skills"
+for d in "$SKILLS"/*/; do
+  cp -R "$d" "$TARGET/.claude/skills/$(basename "$d")"
+done
+
+# 3. Optional seed content (overlays populated indexes + example notes).
+if [ "$SEED" -eq 1 ]; then
+  cp -R "$TEMPLATE/_seed"/. "$TARGET"/
+fi
+
+# 4. Personalize the vault title.
+if [ -f "$TARGET/CLAUDE.md" ]; then
+  # Replace the first line "# Brain — Operating Manual" title prefix with the name.
+  tmp="$(mktemp)"; awk -v n="$NAME" 'NR==1{print "# " n " — Operating Manual"; next} {print}' "$TARGET/CLAUDE.md" > "$tmp" && mv "$tmp" "$TARGET/CLAUDE.md"
+fi
+
+# 5. Git (local, no remote).
+if [ "$DO_GIT" -eq 1 ] && ! [ -d "$TARGET/.git" ]; then
+  ( cd "$TARGET" && git init -q && git add -A && git commit -qm "Initialize \"$NAME\" from brain-kit" )
+fi
+
+cat <<EOF
+✓ Brain "$NAME" created at: $TARGET
+  Skills installed: $(ls "$TARGET/.claude/skills" | tr '\n' ' ')
+$( [ "$SEED" -eq 1 ] && echo "  Seed example notes included." )
+Next:
+  cd "$TARGET" && claude
+  Try:  "log my 1-1 with <name>: ..."   or   "prep me for my 1-1 with <name>"
+  Then: gws auth login   (one-time, to enable brain-import from Google Docs)
+EOF

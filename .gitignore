@@ -1,0 +1,4 @@
+# Kit-level ignores (the vault's own .gitignore lives in template/.gitignore)
+.DS_Store
+*.token
+*.credentials.json

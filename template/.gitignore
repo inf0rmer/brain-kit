@@ -1,0 +1,13 @@
+# Obsidian per-machine UI state and caches (not content)
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/cache
+.trash/
+
+# OS cruft
+.DS_Store
+
+# gws / credentials — never commit secrets
+.gws/
+*.token
+*.credentials.json
