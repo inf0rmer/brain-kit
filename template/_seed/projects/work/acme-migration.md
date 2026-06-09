@@ -1,6 +1,7 @@
 ---
 type: project
 status: active
+owner: "[[jane-doe]]"
 tags: [work, migration]
 created: 2026-06-09
 updated: 2026-06-09

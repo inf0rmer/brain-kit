@@ -1,6 +1,7 @@
 ---
 type: project
 status: active
+owner:
 tags: []
 created: {{date}}
 updated: {{date}}
@@ -9,8 +10,6 @@ aliases: []
 
 # {{title}}
 
-**Status:** active
-**Owner:**
 **Links:**
 
 ## Goal

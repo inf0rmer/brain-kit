@@ -26,14 +26,17 @@ folder map, frontmatter schema, and the **Capture protocol** — this skill exec
    a new person/project — prefer editing an existing note over a duplicate.
 
 4. **Apply the template** from `meta/templates/`, fill frontmatter: real fields +
-   `created`/`updated` = today's date, `person`/`project` cross-links.
+   `created`/`updated` = today's date, `person`/`project` cross-links. **Set the
+   fields that drive the Obsidian Bases**: `role` + `manager` on a person hub,
+   `owner` on a project. Don't leave them blank when you know the value.
 
 5. **Cross-link** related notes with `[[wikilinks]]` (kebab-case basenames).
 
 6. **Update the matching index** (`meta/indexes/…`) if you created a new entity.
 
-7. **Report** what you filed: the path, the type, and links added. Do not commit
-   unless asked.
+7. **Report** what you filed: the path, the type, links added, and an **"Open in
+   Obsidian"** deep link (see `CLAUDE.md` → Obsidian integration for the
+   `obsidian://open?vault=…&file=…` format). Do not commit unless asked.
 
 ## Notes
 - Dates are `YYYY-MM-DD`. Use the real current date.

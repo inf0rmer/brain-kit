@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# brain open — open a brain vault in Obsidian.
+#
+# Usage: brain open [vault-dir]
+#
+#   vault-dir   The brain to open (default: current directory).
+set -euo pipefail
+
+usage() { sed -n '2,6p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit "${1:-1}"; }
+case "${1:-}" in -h|--help) usage 0 ;; esac
+
+DIR="${1:-$PWD}"
+DIR="$(cd "$DIR" 2>/dev/null && pwd)" || { echo "brain open: no such directory: ${1:-$PWD}" >&2; exit 1; }
+[ -f "$DIR/CLAUDE.md" ] || echo "brain open: warning — $DIR has no CLAUDE.md; is it a brain?" >&2
+
+if [ ! -d "/Applications/Obsidian.app" ]; then
+  echo "brain open: Obsidian not found at /Applications/Obsidian.app." >&2
+  echo "  Install from https://obsidian.md (Bases dashboards need 1.9+), then re-run." >&2
+  exit 1
+fi
+
+vault="$(basename "$DIR")"
+registry="$HOME/Library/Application Support/obsidian/obsidian.json"
+
+if [ -f "$registry" ] && grep -qF "\"$DIR\"" "$registry"; then
+  open "obsidian://open?vault=$vault"
+  echo "Opening \"$vault\" in Obsidian…"
+else
+  echo "\"$vault\" isn't registered in Obsidian yet (first time)."
+  echo "In Obsidian: 'Open folder as vault' → select:"
+  echo "  $DIR"
+  echo "After that, 'brain open' reopens it directly."
+  open -a Obsidian
+fi

@@ -13,10 +13,27 @@ active here — only `brain-init` is. See `README.md` for the user-facing overvi
 - `template/_seed/` — optional example notes (`brain init --seed`); excluded from a
   normal init.
 - `bin/brain` — the CLI dispatcher; finds and execs `libexec/brain-<subcommand>`.
-- `libexec/brain-<cmd>` — one script per subcommand (currently `brain-init`). Add a
-  new vault-management command by dropping an executable `libexec/brain-<name>` in;
+- `libexec/brain-<cmd>` — one script per subcommand (`brain-init`, `brain-open`). Add
+  a new vault-management command by dropping an executable `libexec/brain-<name>` in;
   `bin/brain` and its help list pick it up automatically.
+- `template/.obsidian/` — baseline Obsidian config (Templates + Bases enabled).
+- `template/meta/bases/*.base` — native Obsidian Bases (live dashboards), embedded in
+  the index notes via `![[*.base]]`.
 - `.claude/skills/brain-init/` — the only skill active in this kit (wraps `brain init`).
+
+## Obsidian integration (gotchas)
+
+- **Bases need Obsidian 1.9+.** `.base` files won't render on older versions.
+- `core-plugins.json` is an **object map** (`{"templates": true, "bases": true}`) in
+  current Obsidian; the format has changed across versions. If a brain's plugins don't
+  enable, re-derive the file from a freshly-created vault's `.obsidian/` on the target
+  machine.
+- `brain init` injects the Obsidian vault name (the target dir basename) into the
+  brain's `CLAUDE.md` by replacing the `<set-by-brain-init>` sentinel — keep that
+  sentinel in `template/CLAUDE.md`.
+- Frontmatter is the shared contract for the Bases too: `role`/`manager` (person) and
+  `owner` (project) must stay defined in the manual, the templates, the seed notes,
+  the `.base` columns, and the capture/upkeep skills together.
 
 ## Rules when editing the kit
 

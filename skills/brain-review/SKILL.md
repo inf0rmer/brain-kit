@@ -25,3 +25,5 @@ Output: a short briefing + a suggested talking-points list. Cite notes with `[[l
 - Summarize only what's in the vault; never fabricate progress or quotes.
 - Keep it skimmable: headers, bullets, bold the items needing the user's action.
 - End with concrete suggested actions, each linked to its source note.
+- Add an **"Open in Obsidian"** deep link for the person/project the digest centers
+  on (see `CLAUDE.md` → Obsidian integration).

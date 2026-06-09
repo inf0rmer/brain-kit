@@ -1,0 +1,15 @@
+filters:
+  and:
+    - 'type == "idea"'
+properties:
+  status:
+    displayName: Status
+  updated:
+    displayName: Updated
+views:
+  - type: table
+    name: Ideas
+    order:
+      - file.name
+      - note.status
+      - note.updated

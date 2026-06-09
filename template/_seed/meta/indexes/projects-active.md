@@ -2,6 +2,10 @@
 
 Active projects first. Drill in for status, next steps, and decision log.
 
+## Dashboard
+<!-- Live Base view (Obsidian 1.9+); Active / All tabs over frontmatter. -->
+![[projects.base]]
+
 ## Work — active
 - [[acme-migration]] — *example seed*
 

@@ -1,0 +1,22 @@
+filters:
+  and:
+    - file.inFolder("people")
+    - 'type == "person"'
+properties:
+  role:
+    displayName: Role
+  manager:
+    displayName: Manager
+  updated:
+    displayName: Updated
+  last_imported:
+    displayName: Last 1-1 imported
+views:
+  - type: table
+    name: People
+    order:
+      - file.name
+      - note.role
+      - note.manager
+      - note.updated
+      - note.last_imported

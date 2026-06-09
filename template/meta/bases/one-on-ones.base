@@ -1,0 +1,15 @@
+filters:
+  and:
+    - 'type == "one-on-one"'
+properties:
+  person:
+    displayName: Person
+  created:
+    displayName: Date
+views:
+  - type: table
+    name: 1-1 log
+    order:
+      - note.created
+      - note.person
+      - file.name

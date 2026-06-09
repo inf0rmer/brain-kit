@@ -1,0 +1,28 @@
+filters:
+  and:
+    - 'type == "project"'
+properties:
+  status:
+    displayName: Status
+  owner:
+    displayName: Owner
+  updated:
+    displayName: Updated
+views:
+  - type: table
+    name: Active
+    filters:
+      and:
+        - 'status == "active"'
+    order:
+      - file.name
+      - note.status
+      - note.owner
+      - note.updated
+  - type: table
+    name: All
+    order:
+      - file.name
+      - note.status
+      - note.owner
+      - note.updated

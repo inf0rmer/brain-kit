@@ -12,14 +12,18 @@ user to action.
 ## Checks
 
 1. **Orphans** — notes no other note links to (and that link to nothing). Grep for
-   each note's basename across the vault.
+   each note's basename across the vault. **Scope: `.md` notes only** — `.base`,
+   `.obsidian/`, and `meta/templates/` are config/scaffolding, never orphans.
 2. **Stale active** — `status: active` projects/ideas whose `updated` is >14 days
    before today; `person` hubs with no 1-1 in >30 days.
 3. **Frontmatter** — missing/invalid required fields per type (see `CLAUDE.md`
-   schema); `updated` older than the file's last real edit.
-4. **Broken links** — `[[wikilinks]]` with no matching note basename.
+   schema, incl. `role`/`manager` on people and `owner` on projects, which feed the
+   Bases); `updated` older than the file's last real edit.
+4. **Broken links** — `[[wikilinks]]` with no matching note basename (the `![[*.base]]`
+   embeds in index notes are expected — don't flag them).
 5. **Index drift** — entities on disk missing from `meta/indexes/`, or index links
-   pointing at notes that no longer exist.
+   pointing at notes that no longer exist. (Bases self-update from frontmatter — no
+   maintenance needed; only the static link lists need refreshing.)
 
 ## Actions
 

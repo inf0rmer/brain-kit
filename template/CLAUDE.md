@@ -15,6 +15,8 @@ performance, 1-1s). It is **local-only**. Never send note contents to an externa
 service. The only outbound call permitted is `gws` (Google Workspace CLI) to
 *import* a doc the user explicitly points at.
 
+**Obsidian vault name:** `<set-by-brain-init>` (used to build `obsidian://` deep links).
+
 ---
 
 ## Folder map
@@ -45,6 +47,9 @@ Every note starts with YAML frontmatter. Filtering relies on it being consistent
 ---
 type: person | one-on-one | project | idea | resource | win
 status: active | parked | done        # projects, ideas
+role: Senior Engineer                   # person — shown in the People base
+manager: Bruno Abrantes                 # person
+owner: "[[jane-doe]]"                   # project — shown in the Projects base
 person: "[[jane-doe]]"                  # 1-1s, wins, mgmt notes
 project: "[[acme-migration]]"           # when tied to a project
 tags: [report, career, q3]
@@ -56,10 +61,10 @@ aliases: []
 ---
 ```
 
-Required by type:
-- **person** — `type, created, updated`; body has `## Career plan`, `## Current WIP`, `## Wins` sections.
+Required by type (extra fields populate the Obsidian Bases — keep them set):
+- **person** — `type, role, manager, created, updated`; body has `## Career plan`, `## Current WIP`, `## Wins` sections.
 - **one-on-one** — `type, person, created, updated`.
-- **project** — `type, status, created, updated`.
+- **project** — `type, status, owner, created, updated`.
 - **idea** — `type, status, created, updated`.
 - **resource** — `type, gdrive, created, updated`.
 
@@ -74,6 +79,30 @@ real current date) when you modify a note.
 retrieval here**, not with a blind grep — read the relevant index to find the right
 note, then drill in. `brain-upkeep` keeps these current; if you add an entity,
 add its link to the matching index in the same change.
+
+Each index also embeds a live **Base** (`![[*.base]]`) for the human GUI. That embed
+is for Obsidian only — **you read the static link lists below it**, not the Base.
+
+---
+
+## Obsidian integration
+
+The vault is designed to work great in Obsidian (1.9+) without changing how you
+retrieve. Three things to know:
+
+- **Bases (`meta/bases/*.base`)** are live dashboards rendered by Obsidian from
+  frontmatter — *dual layer*: humans get the Base, you get the markdown index +
+  frontmatter. **`.base` files are config, not notes** — ignore them during
+  retrieval and upkeep (never cite, link, or flag them as orphans).
+- **Deep links.** When you file or cite a note, add a one-line "Open in Obsidian"
+  link so the user can jump to it:
+  `obsidian://open?vault=<VAULT>&file=<url-encoded-relative-path>`
+  where `<VAULT>` is the vault name recorded near the top of this file and the path
+  is the note's vault-relative path with spaces as `%20` (e.g.
+  `obsidian://open?vault=my-brain&file=people%2Fjane-doe%2Fjane-doe.md`).
+- **Templates.** Obsidian's core Templates plugin points at `meta/templates/` and
+  only fills `{{date}}`/`{{title}}`; **you fill the rest** (`role`, `person`,
+  `owner`, `gdrive`, …) during capture.
 
 ---
 

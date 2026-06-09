@@ -1,9 +1,11 @@
 ---
 type: person
+role: Senior Software Engineer
+manager: Bruno Abrantes
 tags: [report]
 created: 2026-06-09
 updated: 2026-06-09
-last_imported:
+last_imported: 2026-06-09
 aliases: [Jane, J. Doe]
 ---
 

@@ -1,5 +1,7 @@
 ---
 type: person
+role:
+manager:
 tags: [report]
 created: {{date}}
 updated: {{date}}
@@ -9,8 +11,6 @@ aliases: []
 
 # {{title}}
 
-**Role:**
-**Manager:**
 **Started:**
 
 ## Career plan
