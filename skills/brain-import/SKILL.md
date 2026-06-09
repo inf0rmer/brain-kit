@@ -18,10 +18,21 @@ fallback**: they paste/export the doc text and you treat it as normal input.
 From a URL like `https://docs.google.com/document/d/<FILE_ID>/edit`, extract `<FILE_ID>`.
 
 ## Export to markdown
+`gws files export` writes the document to a **file** and prints only a JSON status
+line to stdout. Pass the request as a JSON `--params` string and capture the bytes
+with `-o`. The output path **must be inside the vault** — `gws` rejects paths outside
+the current directory (so no `$TMPDIR`); use a dot-prefixed temp file in the vault
+root and delete it after filing:
 ```
-gws drive files export --fileId <FILE_ID> --mimeType text/markdown
+gws drive files export --params '{"fileId":"<FILE_ID>","mimeType":"text/markdown"}' -o .brain-import.tmp.md
+# read .brain-import.tmp.md (NOT stdout), file it, then: rm -f .brain-import.tmp.md
 ```
-This preserves headings (`#`, `##`), which the latest-entry mode relies on.
+- The markdown is in the `-o` file. stdout is a status object
+  (`{"bytes":…,"mimeType":"text/markdown","saved_file":"…","status":"success"}`),
+  not the document. A `Using keyring backend: keyring` line on stderr is harmless.
+- Headings (`#`, `##`) are preserved (latest-entry mode still works), but Google's
+  export escapes some characters (`\<`, `R\&D`, `\+`, `\#`, trailing `\` line-breaks)
+  — normalize/tolerate these when filing.
 
 ## Modes
 

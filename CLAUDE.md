@@ -13,9 +13,12 @@ active here — only `brain-init` is. See `README.md` for the user-facing overvi
 - `template/_seed/` — optional example notes (`brain init --seed`); excluded from a
   normal init.
 - `bin/brain` — the CLI dispatcher; finds and execs `libexec/brain-<subcommand>`.
-- `libexec/brain-<cmd>` — one script per subcommand (`brain-init`, `brain-open`). Add
-  a new vault-management command by dropping an executable `libexec/brain-<name>` in;
-  `bin/brain` and its help list pick it up automatically.
+- `libexec/brain-<cmd>` — one script per subcommand (`brain-init`, `brain-open`,
+  `brain-update`). Add a new vault-management command by dropping an executable
+  `libexec/brain-<name>` in; `bin/brain` and its help list pick it up automatically.
+  `brain-update` re-syncs framework files (skills/templates/bases/manual/.gitignore)
+  into an existing vault without touching user content — the safe upgrade path
+  (never use `brain init --force` to upgrade).
 - `template/.obsidian/` — baseline Obsidian config (Templates + Bases enabled).
 - `template/meta/bases/*.base` — native Obsidian Bases (live dashboards), embedded in
   the index notes via `![[*.base]]`.

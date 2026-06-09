@@ -11,3 +11,6 @@
 .gws/
 *.token
 *.credentials.json
+
+# brain-import scratch file (written in-vault by gws, deleted after filing)
+.brain-import.tmp.md

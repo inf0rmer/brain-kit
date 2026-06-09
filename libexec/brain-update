@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+# brain update — re-sync a brain vault's framework files from this kit.
+#
+# Usage: brain update [vault-dir] [--force-config] [--dry-run]
+#
+#   vault-dir       The brain to update (default: current directory).
+#   --force-config  Also overwrite the vault's .obsidian/ config from the kit.
+#   --dry-run       Show what would change without writing anything.
+#
+# Updates FRAMEWORK only — skills, note templates, bases, the operating manual, and
+# .gitignore. NEVER touches your content: notes (people/projects/ideas/resources/
+# 00-inbox), your index lists (meta/indexes), or .obsidian/ (unless --force-config).
+# Review the result with `git diff` in the vault and commit when happy.
+set -euo pipefail
+
+KIT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+TEMPLATE="$KIT_DIR/template"
+SKILLS="$KIT_DIR/skills"
+
+usage() { sed -n '2,12p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit "${1:-1}"; }
+
+DIR="" FORCE_CONFIG=0 DRY=0
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --force-config) FORCE_CONFIG=1; shift ;;
+    --dry-run)      DRY=1; shift ;;
+    -h|--help)      usage 0 ;;
+    -*)             echo "Unknown option: $1" >&2; usage ;;
+    *)              [ -z "$DIR" ] || { echo "Multiple dirs given" >&2; usage; }
+                    DIR="$1"; shift ;;
+  esac
+done
+DIR="${DIR:-$PWD}"
+DIR="$(cd "$DIR" 2>/dev/null && pwd)" || { echo "brain update: no such directory: ${DIR}" >&2; exit 1; }
+
+[ -d "$TEMPLATE" ] && [ -d "$SKILLS" ] || { echo "brain update: kit not found at $KIT_DIR" >&2; exit 1; }
+[ -f "$DIR/CLAUDE.md" ] && [ -d "$DIR/.claude/skills" ] || {
+  echo "brain update: $DIR doesn't look like a brain (need CLAUDE.md + .claude/skills/)." >&2; exit 1; }
+
+run() { [ "$DRY" -eq 1 ] || "$@"; }
+
+echo "Updating brain at: $DIR"
+[ "$DRY" -eq 1 ] && echo "(dry run — nothing written)"
+
+# 1. Skills — replace each kit-managed skill; leave any user-added skills alone.
+for d in "$SKILLS"/*/; do
+  name="$(basename "$d")"
+  run rm -rf "$DIR/.claude/skills/$name"
+  run cp -R "$d" "$DIR/.claude/skills/$name"
+  echo "  skill:    .claude/skills/$name"
+done
+
+# 2. Note templates + bases — framework files.
+for sub in meta/templates meta/bases; do
+  run mkdir -p "$DIR/$sub"
+  for f in "$TEMPLATE/$sub"/*; do
+    [ -e "$f" ] || continue
+    run cp "$f" "$DIR/$sub/$(basename "$f")"
+    echo "  template: $sub/$(basename "$f")"
+  done
+done
+
+# 3. .gitignore.
+run cp "$TEMPLATE/.gitignore" "$DIR/.gitignore"
+echo "  config:   .gitignore"
+
+# 4. Operating manual — overlay, preserving the vault's own title and vault name.
+title="$(sed -n '1s/^# \(.*\) — Operating Manual$/\1/p' "$DIR/CLAUDE.md")"
+[ -n "$title" ] || title="$(basename "$DIR")"
+vault="$(basename "$DIR")"
+if [ "$DRY" -eq 0 ]; then
+  tmp="$(mktemp)"
+  awk -v n="$title" 'NR==1{print "# " n " — Operating Manual"; next} {print}' "$TEMPLATE/CLAUDE.md" > "$tmp"
+  sed -i '' "s|<set-by-brain-init>|$vault|" "$tmp"
+  mv "$tmp" "$DIR/CLAUDE.md"
+fi
+echo "  manual:   CLAUDE.md (title \"$title\" preserved)"
+
+# 5. Obsidian config — only with --force-config (you've likely customized it).
+if [ "$FORCE_CONFIG" -eq 1 ]; then
+  run cp -R "$TEMPLATE/.obsidian/." "$DIR/.obsidian/"
+  echo "  config:   .obsidian/ (overwritten)"
+else
+  echo "  skipped:  .obsidian/ (your GUI config — use --force-config to overwrite)"
+fi
+
+echo
+if [ "$DRY" -eq 1 ]; then
+  echo "Dry run complete — no changes written."
+elif [ -d "$DIR/.git" ]; then
+  echo "Done. Review and commit in the vault:"
+  echo "  git -C \"$DIR\" diff --stat"
+else
+  echo "Done. (Vault has no git repo — changes are on disk.)"
+fi

@@ -12,6 +12,7 @@ brain-kit/
   libexec/
     brain-init          #   `brain init` — scaffolds a new brain vault
     brain-open          #   `brain open` — opens a vault in Obsidian
+    brain-update        #   `brain update` — re-syncs framework files into a vault
   skills/               # canonical brain skills (copied into each new brain)
     brain-capture/      #   file new input (text or a Google Doc link)
     brain-recall/       #   answer questions from notes, with [[citations]]
@@ -105,7 +106,20 @@ So `brain-upkeep` runs without you remembering:
 
 ## Updating brains after changing the kit
 
-The kit is the source of truth. To push skill/template updates into an existing
-brain, re-run `brain init <existing-brain> --force --no-git` (overlays files; review
-the git diff in the brain before committing). Your notes are never touched by this —
-only `template/` and `skills/` content is overlaid.
+The kit is the source of truth; vaults hold copies of the framework files. To pull
+the latest kit changes into an existing brain:
+
+```bash
+brain update ~/Code/my-brain        # or: cd ~/Code/my-brain && brain update
+brain update ~/Code/my-brain --dry-run   # preview what would change
+```
+
+`brain update` re-syncs **framework only** — skills, note templates, bases, the
+operating manual (`CLAUDE.md`, your title preserved), and `.gitignore`. It **never
+touches your content**: notes (`people/`, `projects/`, `ideas/`, `resources/`,
+`00-inbox/`), your index lists (`meta/indexes/`), or your Obsidian config
+(`.obsidian/` — pass `--force-config` to overwrite that too). Review with
+`git diff` in the vault and commit when happy.
+
+> Don't use `brain init --force` to upgrade — it would overwrite your index notes and
+> `.obsidian/` config. Use `brain update`.
