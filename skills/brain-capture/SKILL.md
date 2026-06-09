@@ -17,7 +17,7 @@ folder map, frontmatter schema, and the **Capture protocol** — this skill exec
 2. **Classify** into a `type` + target path:
    - 1-1 → `people/<name>/1-1s/<YYYY-MM-DD>.md` (`one-on-one`)
    - a win → add to the person hub `## Wins` (newest first); optionally a `win` note
-   - project update → edit `projects/<work|personal>/<name>.md` `## Current state` + decision log
+   - project update → edit `projects/<name>.md` `## Current state` + decision log
    - new idea / concept dev → `ideas/<name>.md` (`idea`)
    - a person doesn't exist yet → create their hub from `meta/templates/person.md`
    - anything ambiguous → `00-inbox/<slug>.md` and tell the user it needs filing

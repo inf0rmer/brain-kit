@@ -6,11 +6,8 @@ Active projects first. Drill in for status, next steps, and decision log.
 <!-- Live Base view (Obsidian 1.9+); Active / All tabs over frontmatter. -->
 ![[projects.base]]
 
-## Work — active
+## Active
 - [[acme-migration]] — *example seed*
-
-## Personal — active
-<!-- personal projects -->
 
 ## Parked / done
 <!-- move here when status changes; don't delete -->

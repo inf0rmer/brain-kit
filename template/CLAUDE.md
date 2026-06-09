@@ -26,8 +26,7 @@ service. The only outbound call permitted is `gws` (Google Workspace CLI) to
 | `00-inbox/` | Raw, unprocessed capture awaiting filing | (any) |
 | `people/<name>/<name>.md` | Person **hub**: role, career plan, current WIP, wins log | `person` |
 | `people/<name>/1-1s/<YYYY-MM-DD>.md` | One note per 1-1 | `one-on-one` |
-| `projects/work/<name>.md` | Work project: status, links, decision log | `project` |
-| `projects/personal/<name>.md` | Personal project | `project` |
+| `projects/<name>.md` | A project: status, links, decision log | `project` |
 | `ideas/<name>.md` | Ideation / concept development | `idea` |
 | `resources/gdrive/<name>.md` | Imported/referenced Google Docs | `resource` |
 | `meta/templates/` | Note templates (one per type) | — |
@@ -36,6 +35,10 @@ service. The only outbound call permitted is `gws` (Google Workspace CLI) to
 
 `<name>` is **kebab-case** (`jane-doe`, `acme-migration`). Wikilinks resolve by
 basename, so `[[jane-doe]]` points at `people/jane-doe/jane-doe.md`.
+
+Projects are **flat** — keep separate concerns (e.g. work vs personal) in **separate
+brains/vaults**, not subfolders. If you must mix them in one brain, distinguish with a
+`tags:` entry (e.g. `tags: [side-project]`) and filter the Projects base on it.
 
 ---
 
