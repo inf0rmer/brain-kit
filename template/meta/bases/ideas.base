@@ -1,5 +1,6 @@
 filters:
   and:
+    - file.inFolder("ideas")
     - 'type == "idea"'
 properties:
   status:

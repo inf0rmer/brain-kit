@@ -1,5 +1,6 @@
 filters:
   and:
+    - file.inFolder("people")
     - 'type == "one-on-one"'
 properties:
   person:

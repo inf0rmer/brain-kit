@@ -1,5 +1,6 @@
 filters:
   and:
+    - file.inFolder("projects")
     - 'type == "project"'
 properties:
   status:
