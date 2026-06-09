@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# brain — CLI for managing second-brain vaults built with brain-kit.
+#
+# Usage: brain <command> [args]
+#
+# Subcommands live in ../libexec/brain-<command>; this dispatcher just finds and
+# execs them, so adding a command is a matter of dropping a new libexec script in.
+set -euo pipefail
+
+KIT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+LIBEXEC="$KIT_DIR/libexec"
+
+list_commands() {
+  for f in "$LIBEXEC"/brain-*; do
+    [ -f "$f" ] && [ -x "$f" ] && basename "$f" | sed 's/^brain-//'
+  done
+}
+
+usage() {
+  cat <<EOF
+brain — manage second-brain vaults (brain-kit)
+
+Usage: brain <command> [args]
+
+Commands:
+$(for c in $(list_commands); do printf '  %s\n' "$c"; done)
+  help                 Show this help
+
+Run 'brain <command> --help' for command-specific options.
+EOF
+}
+
+cmd="${1:-help}"
+case "$cmd" in
+  help|-h|--help) usage; exit 0 ;;
+esac
+shift || true
+
+target="$LIBEXEC/brain-$cmd"
+if [ -x "$target" ]; then
+  exec "$target" "$@"
+fi
+
+echo "brain: unknown command '$cmd'" >&2
+echo >&2
+usage >&2
+exit 1

@@ -10,10 +10,13 @@ active here — only `brain-init` is. See `README.md` for the user-facing overvi
   verbatim into every new brain's `.claude/skills/`.
 - `template/` — the vault skeleton copied into a new brain. `template/CLAUDE.md` is
   the **brain's** operating manual (frontmatter schema + retrieval/capture protocol).
-- `template/_seed/` — optional example notes (`brain-init --seed`); excluded from a
+- `template/_seed/` — optional example notes (`brain init --seed`); excluded from a
   normal init.
-- `bin/brain-init` — the scaffolder.
-- `.claude/skills/brain-init/` — the only skill active in this kit.
+- `bin/brain` — the CLI dispatcher; finds and execs `libexec/brain-<subcommand>`.
+- `libexec/brain-<cmd>` — one script per subcommand (currently `brain-init`). Add a
+  new vault-management command by dropping an executable `libexec/brain-<name>` in;
+  `bin/brain` and its help list pick it up automatically.
+- `.claude/skills/brain-init/` — the only skill active in this kit (wraps `brain init`).
 
 ## Rules when editing the kit
 
@@ -21,10 +24,10 @@ active here — only `brain-init` is. See `README.md` for the user-facing overvi
   skill must not reference a field, folder, or convention the manual doesn't define.
 - Skill names, frontmatter `type` values, and folder paths are a shared contract;
   change them in all three places (manual, templates, skills) together.
-- `brain-init` copies `skills/*` into brains but never copies itself — brains don't
-  init brains. Don't move `brain-init` into `skills/`.
-- After changing `bin/brain-init`, test it: `bin/brain-init /tmp/test-brain --seed`
-  then inspect the tree and `rm -rf /tmp/test-brain`.
+- `brain init` copies `skills/*` into brains but never copies the `brain` CLI — brains
+  don't init brains. Keep subcommands in `libexec/`, not in `skills/`.
+- After changing `bin/brain` or `libexec/brain-init`, test it:
+  `bin/brain init /tmp/test-brain --seed` then inspect the tree and `rm -rf /tmp/test-brain`.
 
 ## Pre-commit
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# brain-init — scaffold a new "brain" vault (its own repo) from this brain-kit.
+# brain init — scaffold a new "brain" vault (its own repo) from this brain-kit.
 #
-# Usage: brain-init <target-dir> [--name "Brain Name"] [--seed] [--no-git] [--force]
+# Usage: brain init <target-dir> [--name "Brain Name"] [--seed] [--no-git] [--force]
 #
 #   <target-dir>   Where to create the brain. Must be empty or non-existent.
 #   --name NAME    Title written into the vault's CLAUDE.md (default: dir name).
@@ -14,7 +14,7 @@ KIT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TEMPLATE="$KIT_DIR/template"
 SKILLS="$KIT_DIR/skills"
 
-usage() { sed -n '2,11p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit "${1:-1}"; }
+usage() { sed -n '2,10p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit "${1:-1}"; }
 
 TARGET="" NAME="" SEED=0 DO_GIT=1 FORCE=0
 while [ $# -gt 0 ]; do

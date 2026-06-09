@@ -1,6 +1,6 @@
 ---
 name: brain-init
-description: Scaffold a brand-new "brain" vault in its own separate repository from this brain-kit. Use when the user wants to create/initialize/bootstrap a new brain, second brain, or notes vault. Runs bin/brain-init to copy the vault skeleton + skills into a target directory and git-init it.
+description: Scaffold a brand-new "brain" vault in its own separate repository from this brain-kit. Use when the user wants to create/initialize/bootstrap a new brain, second brain, or notes vault. Runs `brain init` to copy the vault skeleton + skills into a target directory and git-init it.
 ---
 
 # brain-init
@@ -12,8 +12,9 @@ a target directory so the new brain is self-contained and version-controlled on 
 ## Run it
 
 ```
-bin/brain-init <target-dir> [--name "Brain Name"] [--seed] [--no-git]
+brain init <target-dir> [--name "Brain Name"] [--seed] [--no-git]
 ```
+(Falls back to `bin/brain init …` if `brain` isn't on PATH.)
 
 - `--seed` includes the example notes (good for a first look / testing).
 - `--no-git` skips the git repo + initial commit.

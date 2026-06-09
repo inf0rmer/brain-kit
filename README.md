@@ -8,7 +8,9 @@ each living in its own separate repository.
 
 ```
 brain-kit/
-  bin/brain-init        # scaffolder: creates a new brain vault in a target dir
+  bin/brain             # the `brain` CLI dispatcher (put bin/ on your PATH)
+  libexec/
+    brain-init          #   `brain init` — scaffolds a new brain vault
   skills/               # canonical brain skills (copied into each new brain)
     brain-capture/      #   file new input (text or a Google Doc link)
     brain-recall/       #   answer questions from notes, with [[citations]]
@@ -19,10 +21,13 @@ brain-kit/
     CLAUDE.md           #   the brain's operating manual (retrieval/capture protocol)
     meta/templates/     #   note templates per type
     meta/indexes/       #   MOC dashboards (retrieval entry points)
-    _seed/              #   optional example notes (brain-init --seed)
+    _seed/              #   optional example notes (brain init --seed)
   .claude/skills/
-    brain-init/         # the only skill active in the kit
+    brain-init/         # the only skill active in the kit (wraps `brain init`)
 ```
+
+The `brain` CLI is a dispatcher: each subcommand is a `libexec/brain-<name>`
+script, so future vault-management commands are added by dropping a new script in.
 
 ## Design in one paragraph
 
@@ -35,8 +40,8 @@ single permitted outbound call is `gws` to *import* a Google Doc you point at.
 ## Create a brain
 
 ```bash
-bin/brain-init ~/Code/my-brain --name "My Brain"        # clean vault
-bin/brain-init ~/tmp/demo-brain --name "Demo" --seed     # with example notes
+brain init ~/Code/my-brain --name "My Brain"        # clean vault
+brain init ~/tmp/demo-brain --name "Demo" --seed     # with example notes
 ```
 
 Then:
@@ -47,7 +52,8 @@ cd ~/Code/my-brain && claude
 gws auth login        # one-time, enables brain-import from Google Docs
 ```
 
-Optionally add `bin/` to your `PATH` (or symlink `bin/brain-init`) to run it anywhere.
+The `brain` command is available once `bin/` is on your `PATH` (run `brain` or
+`brain help` to list subcommands).
 
 ## Automating upkeep (per brain)
 
@@ -72,6 +78,6 @@ So `brain-upkeep` runs without you remembering:
 ## Updating brains after changing the kit
 
 The kit is the source of truth. To push skill/template updates into an existing
-brain, re-run `brain-init <existing-brain> --force --no-git` (overlays files; review
+brain, re-run `brain init <existing-brain> --force --no-git` (overlays files; review
 the git diff in the brain before committing). Your notes are never touched by this —
 only `template/` and `skills/` content is overlaid.
