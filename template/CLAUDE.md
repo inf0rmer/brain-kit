@@ -11,9 +11,11 @@ synthesize. The conventions below are what make that fast and accurate, so honor
 them exactly.
 
 **Privacy:** This vault holds sensitive management data (reports' career plans,
-performance, 1-1s). It is **local-only**. Never send note contents to an external
-service. The only outbound call permitted is `gws` (Google Workspace CLI) to
-*import* a doc the user explicitly points at.
+performance, 1-1s). It is **local-only**. Do not send note contents to any external
+service **except** via the explicit, user-initiated **brain-publish** skill, which
+publishes a single named note to the user's own Google Docs with a sensitivity gate
+and a confirm step. `gws` is otherwise import-only (brain-import). No other path —
+and no bulk or automatic export — ever sends content out.
 
 **Obsidian vault name:** `<set-by-brain-init>` (used to build `obsidian://` deep links).
 
@@ -139,6 +141,7 @@ retrieve. Three things to know:
 - **brain-recall** — answer questions via the retrieval protocol, with citations.
 - **brain-review** — management/status digests (e.g. "prep me for my 1-1 with Jane").
 - **brain-import** — pull a Google Doc via `gws` → markdown; supports latest-dated-entry mode.
+- **brain-publish** — publish one note to the user's Google Docs (clean copy, sensitivity-gated, confirm-first, links back). The only outbound path.
 - **brain-upkeep** — hygiene + index refresh; runs on a weekly cron, writes `meta/upkeep-report.md`.
 
 ## Conventions

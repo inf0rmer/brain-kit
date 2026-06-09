@@ -18,6 +18,7 @@ brain-kit/
     brain-recall/       #   answer questions from notes, with [[citations]]
     brain-review/       #   1-1 prep & status digests
     brain-import/       #   pull Google Docs via `gws` (incl. latest-dated-entry)
+    brain-publish/      #   publish one note to your Google Docs (gated, confirm-first)
     brain-upkeep/       #   hygiene pass + index refresh (cron-friendly)
   template/             # the vault skeleton copied into a new brain
     CLAUDE.md           #   the brain's operating manual (retrieval/capture protocol)
@@ -38,8 +39,9 @@ script, so future vault-management commands are added by dropping a new script i
 Retrieval is **agentic, not embeddings-based**: Claude navigates a well-structured
 vault (consistent frontmatter, `[[wikilinks]]`, index notes) and reasons over grep
 results. The conventions live in each brain's `CLAUDE.md`, which is the real "brain".
-Brains are **local-only** (sensitive management data never leaves the machine); the
-single permitted outbound call is `gws` to *import* a Google Doc you point at.
+Brains are **local-only** (sensitive management data never leaves the machine).
+Content leaves only via the explicit, confirm-first **brain-publish** skill (publish
+one note to your own Google Docs, sensitivity-gated); `gws` is otherwise import-only.
 
 ## Create a brain
 
